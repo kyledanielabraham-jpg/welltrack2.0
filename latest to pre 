@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WellTrack BMI - SanJoseLitexSeniorHighSchool</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#ff9ec4,#ffc1d6);
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+margin:0;
+padding:20px;
+}
+.card{
+background:white;
+padding:35px;
+border-radius:24px;
+box-shadow:0 15px 35px rgba(0,0,0,0.15);
+width:95%;
+max-width:950px;
+text-align:center;
+border:2px solid black;
+max-height:90vh;
+overflow:auto;
+}
+.header{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:15px;
+margin-bottom:25px;
+}
+.header img{
+width:60px;
+height:60px;
+border-radius:12px;
+}
+.school-title h1{
+margin:0;
+color:hotpink;
+}
+input{
+width:100%;
+max-width:400px;
+padding:14px;
+margin:10px auto;
+border-radius:12px;
+border:2px solid black;
+background:#fff5fa;
+display:block;
+box-sizing:border-box;
+}
+.password-box{
+position:relative;
+width:100%;
+max-width:400px;
+margin:10px auto;
+}
+.password-box input{
+width:100%;
+padding-right:45px;
+}
+.eye{
+position:absolute;
+right:12px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+font-size:18px;
+}
+button{
+padding:12px 24px;
+border-radius:12px;
+background:hotpink;
+color:white;
+border:none;
+margin:8px;
+cursor:pointer;
+font-weight:600;
+}
+button:hover{
+background:#ff5ca1;
+}
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+th{
+background:hotpink;
+color:white;
+padding:12px;
+}
+td{
+padding:12px;
+border:1px solid #eee;
+}
+.Underweight{color:#2196f3;font-weight:bold;}
+.Normal{color:#4caf50;font-weight:bold;}
+.Overweight{color:#ff9800;font-weight:bold;}
+.Obese{color:#f44336;font-weight:bold;}
+.bmi-inputs-row{
+display:flex;
+gap:15px;
+max-width:600px;
+margin:auto;
+}
+.modern-input-group{
+flex:1;
+display:flex;
+align-items:center;
+background:#fff5fa;
+border:2px solid black;
+border-radius:12px;
+overflow:hidden;
+height:55px;
+}
+.modern-input-group input{
+border:none;
+background:transparent;
+margin:0;
+flex:1;
+padding:10px;
+}
+.unit-switch{
+border:none;
+border-left:2px solid black;
+background:#ffd6eb;
+height:100%;
+width:80px;
+font-weight:600;
+}
+#ftInput{
+display:none;
+width:100%;
+height:100%;
+display:flex;
+}
+#ftInput input{
+width:50%;
+text-align:center;
+}
+/* BMI METER */
+#bmiMeter{
+width:100%;
+max-width:600px;
+height:22px;
+margin:15px auto;
+border-radius:12px;
+background:linear-gradient(
+to right,
+#2196f3 0%,
+#2196f3 25%,
+#4caf50 25%,
+#4caf50 50%,
+#ff9800 50%,
+#ff9800 75%,
+#f44336 75%,
+#f44336 100%
+);
+position:relative;
+border:2px solid black;
+}
+#bmiPointer{
+width:4px;
+height:30px;
+background:black;
+position:absolute;
+top:-4px;
+left:50%;
+transition:0.5s;
+}
+</style>
+</head>
+<body>
+
+<div id="frontPage" class="card">
+<div class="header">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvNcutHVwovKwxA6Ul2UJhbSLMbI0ElMvy02UE_sbCQky9hnmnl3c7fFE&s=10">
+<div class="school-title">
+<h1>WellTrack BMI</h1>
+<p>SanJoseLitexSeniorHighSchool</p>
+</div>
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIIgIbE3prBazJq_qX0sFnyRAEi7oWAZyfBp7ujJBIRw&s=10">
+</div>
+<button onclick="showPage('loginPage')">Login / Sign Up</button>
+<button onclick="viewDashboard(false,false,true)" style="background:#555">Public Dashboard</button>
+</div>
+
+<div id="loginPage" class="card" style="display:none;">
+<h2>Login</h2>
+<input id="loginUser" placeholder="Surname-Section">
+<div class="password-box">
+<input type="password" id="loginPass" placeholder="Password">
+<span class="eye" onclick="togglePass('loginPass')">👁</span>
+</div>
+<button onclick="login()">Login</button>
+<p onclick="showPage('signupPage')" style="cursor:pointer;color:blue">Need an account? Sign Up</p>
+<button onclick="showPage('frontPage')" style="background:#555">Back</button>
+</div>
+
+<div id="signupPage" class="card" style="display:none;">
+<h2>Sign Up</h2>
+<input id="signupUser" placeholder="Surname-Section">
+<div class="password-box">
+<input type="password" id="signupPass" placeholder="Password">
+<span class="eye" onclick="togglePass('signupPass')">👁</span>
+</div>
+<button onclick="signup()">Sign Up</button>
+<button onclick="showPage('loginPage')">Back</button>
+</div>
+
+<div id="bmiPage" class="card" style="display:none;">
+<h1>WellTrack BMI</h1>
+<p>Logged in: <b id="displayUser"></b></p>
+
+<div class="bmi-inputs-row">
+<div class="modern-input-group">
+<div id="cmInput"><input type="number" id="height" placeholder="Height"></div>
+<div id="ftInput">
+<input type="number" id="hFt" placeholder="Ft">
+<input type="number" id="hIn" placeholder="In">
+</div>
+<select id="hUnit" class="unit-switch" onchange="toggleInputs()">
+<option value="cm">cm</option>
+<option value="ft">ft/in</option>
+</select>
+</div>
+<div class="modern-input-group">
+<input type="number" id="weight" placeholder="Weight">
+<select id="wUnit" class="unit-switch">
+<option value="kg">kg</option>
+<option value="lbs">lbs</option>
+</select>
+</div>
+</div>
+
+<button onclick="calculateBMI()" style="width:100%;max-width:600px">Calculate & Save</button>
+<h3 id="result"></h3>
+<div id="bmiMeter"><div id="bmiPointer"></div></div>
+
+<hr>
+<button onclick="showAnalytics()" style="background:#00bcd4">Progress Chart</button>
+<button onclick="viewDashboard(false,true)" style="background:#ba68c8">My Records</button>
+<button id="adminBtn" style="display:none;background:#5e00ff" onclick="viewDashboard(true,false)">Admin Panel</button>
+<button onclick="logout()" style="background:#555">Logout</button>
+</div>
+
+<div id="dashboardPage" class="card" style="display:none;">
+<h2>Records</h2>
+<input id="searchBox" placeholder="Search..." onkeyup="searchRecords()">
+<table>
+<thead>
+<tr>
+<th>Date</th><th>Surname</th><th>Section</th><th>BMI</th><th>Category</th><th id="actionCol" style="display:none">Action</th>
+</tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+<br>
+<button onclick="showStats()" style="background:#00bcd4">Show Average</button>
+<button onclick="retrieveRecords()" style="background:#009688">Retrieve Deleted</button>
+<button onclick="exportCSV()" style="background:#4caf50">Export Excel</button>
+<p id="statsResult"></p>
+<h3>School BMI Statistics</h3>
+<canvas id="publicChart"></canvas>
+<button onclick="currentUser ? showPage('bmiPage') : showPage('frontPage')" style="background:#555">Back</button>
+</div>
+
+<div id="analyticsPage" class="card" style="display:none;">
+<h2>BMI History</h2>
+<canvas id="bmiChart"></canvas>
+<button onclick="showPage('bmiPage')">Back</button>
+</div>
+
+<script>
+let users=JSON.parse(localStorage.getItem("users"))||{"admin":"admin123"};
+let bmiRecords=JSON.parse(localStorage.getItem("bmiRecords"))||[];
+let deletedRecords=JSON.parse(localStorage.getItem("deletedRecords"))||[];
+let currentUser="",myChart=null,publicChart=null;
+
+function showPage(id){document.querySelectorAll(".card").forEach(c=>c.style.display="none");document.getElementById(id).style.display="block";}
+function togglePass(id){let f=document.getElementById(id);f.type=f.type==="password"?"text":"password";}
+function toggleInputs(){let h=document.getElementById("hUnit").value;cmInput.style.display=h==="cm"?"block":"none";ftInput.style.display=h==="ft"?"flex":"none";}
+
+function signup(){
+let u=signupUser.value.trim(),p=signupPass.value.trim();
+if(!u.includes("-")){alert("Format: Surname-Section");return;}
+if(users[u]){alert("User already exists!");return;}
+users[u]=p; localStorage.setItem("users",JSON.stringify(users));
+alert("Account created"); showPage("loginPage");
+}
+
+function login(){
+let u=loginUser.value.trim(),p=loginPass.value.trim();
+if(users[u]===p){currentUser=u; displayUser.innerText=u; adminBtn.style.display=(u==="admin")?"inline-block":"none"; showPage("bmiPage");}
+else alert("Invalid login");
+}
+
+function getCategory(b){if(b<18.5)return"Underweight"; if(b<24.9)return"Normal"; if(b<29.9)return"Overweight"; return"Obese";}
+
+function calculateBMI(){
+let hCm,wKg,w=parseFloat(weight.value),wUnit=document.getElementById("wUnit").value;
+if(document.getElementById("hUnit").value==="cm") hCm=parseFloat(height.value);
+else {let ft=parseFloat(hFt.value)||0,inch=parseFloat(hIn.value)||0; hCm=(ft*30.48)+(inch*2.54);}
+wKg=wUnit==="lbs"?w/2.20462:w;
+if(!hCm||!wKg){alert("Enter height and weight");return;}
+let bmi=parseFloat((wKg/((hCm/100)**2)).toFixed(2)),cat=getCategory(bmi);
+let p=currentUser.split("-");
+bmiRecords.push({owner:currentUser,date:new Date().toLocaleDateString(),surname:p[0],section:p[1],bmi:bmi,category:cat});
+localStorage.setItem("bmiRecords",JSON.stringify(bmiRecords));
+result.innerHTML=`Result: <span class="${cat}">${bmi} (${cat})</span>`;
+moveMeter(bmi);
+height.value="";weight.value="";hFt.value="";hIn.value="";
+}
+
+function moveMeter(bmi){
+let pos=0;
+if(bmi<18.5) pos=(bmi/18.5)*25;
+else if(bmi<24.9) pos=25+((bmi-18.5)/(24.9-18.5))*25;
+else if(bmi<29.9) pos=50+((bmi-24.9)/(29.9-24.9))*25;
+else pos=75+Math.min((bmi-29.9)/10*25,25);
+document.getElementById("bmiPointer").style.left=pos+"%";
+}
+
+function viewDashboard(admin,userOnly,publicView=false){
+if(publicView)currentUser="";
+showPage("dashboardPage");
+actionCol.style.display=(admin||userOnly)?"table-cell":"none";
+tableBody.innerHTML="";
+bmiRecords.forEach((r,i)=>{
+if(userOnly&&r.owner!==currentUser)return;
+tableBody.innerHTML+=`<tr>
+<td>${r.date}</td><td>${r.surname}</td><td>${r.section}</td><td>${r.bmi}</td><td class="${r.category}">${r.category}</td>
+${(admin||(userOnly&&r.owner===currentUser))?`<td><button onclick="deleteRec(${i},${userOnly})" style="background:red">X</button></td>`:""}
+</tr>`;
+});
+showPublicChart();
+}
+
+function deleteRec(i,userView){deletedRecords.push(bmiRecords[i]); bmiRecords.splice(i,1); localStorage.setItem("bmiRecords",JSON.stringify(bmiRecords)); localStorage.setItem("deletedRecords",JSON.stringify(deletedRecords)); viewDashboard(currentUser==="admin",userView);}
+function retrieveRecords(){bmiRecords=bmiRecords.concat(deletedRecords); deletedRecords=[]; localStorage.setItem("bmiRecords",JSON.stringify(bmiRecords)); localStorage.setItem("deletedRecords",JSON.stringify(deletedRecords)); viewDashboard(true,false);}
+function exportCSV(){let csv="Date,Surname,Section,BMI,Category\n"; bmiRecords.forEach(r=>{csv+=`${r.date},${r.surname},${r.section},${r.bmi},${r.category}\n`;}); let blob=new Blob([csv],{type:"text/csv"}); let a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="BMI_records.csv"; a.click();}
+function searchRecords(){let val=searchBox.value.toLowerCase(); document.querySelectorAll("#tableBody tr").forEach(row=>{row.style.display=row.innerText.toLowerCase().includes(val)?"":"none";});}
+function showStats(){let total=0; bmiRecords.forEach(r=>total+=parseFloat(r.bmi)); statsResult.innerText="Average BMI: "+(total/bmiRecords.length).toFixed(2);}
+function showPublicChart(){let u=0,n=0,o=0,b=0; bmiRecords.forEach(r=>{if(r.category==="Underweight")u++;if(r.category==="Normal")n++;if(r.category==="Overweight")o++;if(r.category==="Obese")b++;}); let ctx=document.getElementById("publicChart"); if(publicChart)publicChart.destroy(); publicChart=new Chart(ctx,{type:"bar",data:{labels:["Underweight","Normal","Overweight","Obese"],datasets:[{data:[u,n,o,b],backgroundColor:["#2196f3","#4caf50","#ff9800","#f44336"]}]},options:{plugins:{legend:{display:false}}}});}
+function showAnalytics(){showPage("analyticsPage"); let data=bmiRecords.filter(r=>r.owner===currentUser); let ctx=document.getElementById("bmiChart"); if(myChart)myChart.destroy(); myChart=new Chart(ctx,{type:"line",data:{labels:data.map(r=>r.date),datasets:[{label:"BMI Trend",data:data.map(r=>r.bmi),borderColor:"hotpink",tension:0.3}]}});}
+function logout(){currentUser="";showPage("frontPage");}
+</script>
+
+</body>
+</html>
